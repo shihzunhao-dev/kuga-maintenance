@@ -7,8 +7,6 @@ export const DEFAULT_SCHEDULE = [
   { id: 'cabin_filter', name: 'PM2.5活性碳粉塵過濾器', intervalKm: 20000,  lastReplacedKm: 28385 },
   { id: 'air_filter', name: '空氣濾清器',               intervalKm: 40000,  lastReplacedKm: 28385 },
   { id: 'brake_fluid', name: '煞車油 (DOT 4 LV)',      intervalKm: 40000,  lastReplacedKm: 37251 },
-  { id: 'fuel_filter', name: '燃油濾清器',              intervalKm: 40000,  lastReplacedKm: 0 },
-  { id: 'ps_fluid',   name: '方向機油',                 intervalKm: 40000,  lastReplacedKm: 0 },
   { id: 'atf',        name: '變速箱油 (8速)',           intervalKm: 40000,  lastReplacedKm: 37251 },
   { id: 'spark_plug', name: '火星塞',                   intervalKm: 60000,  lastReplacedKm: 0 },
   { id: 'coolant',    name: '防凍冷卻液',               intervalKm: 160000, lastReplacedKm: 0 },
