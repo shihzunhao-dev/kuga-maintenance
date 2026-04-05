@@ -1,0 +1,55 @@
+// 從 Excel R19~R30 + 保養歷史 R1~R13 轉換而來
+
+export const DEFAULT_SCHEDULE = [
+  { id: 'oil',        name: '5W30 機油',               intervalKm: 10000,  lastReplacedKm: 37251 },
+  { id: 'oil_filter', name: '機油芯',                   intervalKm: 10000,  lastReplacedKm: 37251 },
+  { id: 'drain_plug', name: '油底殼螺絲/墊片',          intervalKm: 10000,  lastReplacedKm: 37251 },
+  { id: 'cabin_filter', name: 'PM2.5活性碳粉塵過濾器', intervalKm: 20000,  lastReplacedKm: 28385 },
+  { id: 'air_filter', name: '空氣濾清器',               intervalKm: 40000,  lastReplacedKm: 28385 },
+  { id: 'brake_fluid', name: '煞車油 (DOT 4 LV)',      intervalKm: 40000,  lastReplacedKm: 37251 },
+  { id: 'fuel_filter', name: '燃油濾清器',              intervalKm: 40000,  lastReplacedKm: 0 },
+  { id: 'ps_fluid',   name: '方向機油',                 intervalKm: 40000,  lastReplacedKm: 0 },
+  { id: 'atf',        name: '變速箱油 (8速)',           intervalKm: 40000,  lastReplacedKm: 37251 },
+  { id: 'spark_plug', name: '火星塞',                   intervalKm: 60000,  lastReplacedKm: 0 },
+  { id: 'coolant',    name: '防凍冷卻液',               intervalKm: 160000, lastReplacedKm: 0 },
+  { id: 'belt',       name: '傳動皮帶',                 intervalKm: 160000, lastReplacedKm: 0 },
+  { id: 'transfer',   name: '加力箱油 (AWD)',           intervalKm: 240000, lastReplacedKm: 37251 },
+  { id: 'diff',       name: '差速器油 (AWD)',           intervalKm: 240000, lastReplacedKm: 37251 },
+  { id: 'brake_clean', name: '煞車清洗劑',             intervalKm: 10000,  lastReplacedKm: 37251 },
+  { id: 'throttle',   name: '電子節氣門清潔劑',         intervalKm: 20000,  lastReplacedKm: 37251 },
+  { id: 'fuel_additive', name: '汽油添加劑',           intervalKm: 40000,  lastReplacedKm: 37251 },
+]
+
+export const DEFAULT_HISTORY = [
+  {
+    seq: 1, km: 5015, date: '2023-04-23', cost: 4771,
+    items: ['oil', 'oil_filter', 'drain_plug'],
+    prices: { labor: 648, oil_filter: 263, drain_plug: 200, oil: 3660 }
+  },
+  {
+    seq: 2, km: 12039, date: '2023-10-22', cost: 6519,
+    items: ['oil', 'oil_filter', 'drain_plug', 'cabin_filter', 'air_filter', 'brake_clean', 'throttle'],
+    prices: { labor: 1008, oil_filter: 263, drain_plug: 200, oil: 3050, cabin_filter: 830, air_filter: 460, brake_clean: 390, throttle: 318 }
+  },
+  {
+    seq: 3, km: 20171, date: '2024-04-05', cost: 4953,
+    items: ['oil', 'oil_filter', 'drain_plug'],
+    prices: { labor: 1440, oil_filter: 263, drain_plug: 200, oil: 3050 }
+  },
+  {
+    seq: 4, km: 28385, date: '2024-10-04', cost: 6303,
+    items: ['oil', 'oil_filter', 'drain_plug', 'cabin_filter', 'air_filter'],
+    prices: { labor: 1500, oil_filter: 263, drain_plug: 200, oil: 3050, cabin_filter: 830, air_filter: 460 }
+  },
+  {
+    seq: 5, km: 37251, date: '2025-04-28', cost: 14210,
+    items: ['oil', 'oil_filter', 'drain_plug', 'brake_clean', 'throttle', 'atf', 'diff', 'transfer', 'brake_fluid', 'fuel_additive'],
+    prices: { labor: 1875, oil_filter: 263, drain_plug: 200, oil: 3050, brake_clean: 390, throttle: 318, atf: 2750, diff: 4199, transfer: 390, brake_fluid: 440, fuel_additive: 335 }
+  },
+]
+
+export const DEFAULT_TIRES = [
+  { km: 32680, from: '馬牌 PC6', to: '米其林 Primacy+ SUV', date: '2025-02' }
+]
+
+export const DEFAULT_CURRENT_KM = 37251
