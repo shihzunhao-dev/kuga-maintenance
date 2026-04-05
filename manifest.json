@@ -1,0 +1,13 @@
+{
+  "name": "Kuga 保養助手",
+  "short_name": "Kuga保養",
+  "description": "Ford Kuga MK3 定期保養追蹤與提醒",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#1e3a5f",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
