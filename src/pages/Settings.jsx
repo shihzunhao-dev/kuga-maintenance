@@ -1,5 +1,116 @@
 import { useState } from 'react'
-import { getStore, updateScheduleItem, addScheduleItem, removeScheduleItem, resetToDefaults, updateTireTarget, addTireRecord } from '../data/store'
+import { getStore, updateStore, updateScheduleItem, addScheduleItem, removeScheduleItem, resetToDefaults, updateTireTarget, addTireRecord } from '../data/store'
+import { getGistConfig, saveGistConfig, clearGistConfig, pushToGist, pullFromGist } from '../data/gistSync'
+
+const DEFAULT_GIST_ID = 'b9beb161a4ca0a8a3f3c0e654037c323'
+
+function GistSyncSection({ store, refresh }) {
+  const config = getGistConfig()
+  const [token, setToken] = useState(config.token)
+  const [gistId, setGistId] = useState(config.gistId || DEFAULT_GIST_ID)
+  const [status, setStatus] = useState(null) // { type: 'ok'|'error', msg }
+  const [syncing, setSyncing] = useState(false)
+  const [showConfig, setShowConfig] = useState(!config.token)
+
+  function handleSaveConfig() {
+    saveGistConfig(gistId, token)
+    setShowConfig(false)
+    setStatus({ type: 'ok', msg: '設定已儲存' })
+  }
+
+  async function handlePush() {
+    setSyncing(true)
+    setStatus(null)
+    try {
+      saveGistConfig(gistId, token)
+      await pushToGist(store)
+      setStatus({ type: 'ok', msg: '已上傳至雲端' })
+    } catch (e) {
+      setStatus({ type: 'error', msg: e.message })
+    }
+    setSyncing(false)
+  }
+
+  async function handlePull() {
+    setSyncing(true)
+    setStatus(null)
+    try {
+      saveGistConfig(gistId, token)
+      const data = await pullFromGist()
+      const { _syncedAt, ...rest } = data
+      updateStore(rest)
+      refresh()
+      setStatus({ type: 'ok', msg: `已從雲端下載（${_syncedAt ? new Date(_syncedAt).toLocaleString('zh-TW') : ''}）` })
+    } catch (e) {
+      setStatus({ type: 'error', msg: e.message })
+    }
+    setSyncing(false)
+  }
+
+  return (
+    <div className="space-y-2 pt-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-bold text-gray-500">雲端同步</h2>
+        <button onClick={() => setShowConfig(!showConfig)} className="text-xs text-[#1e3a5f] font-medium">
+          {showConfig ? '收起' : '設定'}
+        </button>
+      </div>
+
+      {showConfig && (
+        <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
+          <div>
+            <label className="text-[11px] text-gray-400 block mb-1">GitHub Personal Access Token（需要 gist 權限）</label>
+            <input
+              type="password"
+              value={token}
+              onChange={e => setToken(e.target.value)}
+              placeholder="ghp_xxxxxxxxxxxx"
+              className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1e3a5f]"
+            />
+          </div>
+          <div>
+            <label className="text-[11px] text-gray-400 block mb-1">Gist ID</label>
+            <input
+              type="text"
+              value={gistId}
+              onChange={e => setGistId(e.target.value)}
+              className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1e3a5f] font-mono text-xs"
+            />
+          </div>
+          <button onClick={handleSaveConfig} className="w-full bg-[#1e3a5f] text-white py-2 rounded-lg text-sm font-medium">
+            儲存設定
+          </button>
+          <div className="text-[11px] text-gray-400">
+            到 GitHub → Settings → Developer settings → Personal access tokens → 建立 token，勾選 gist 權限即可
+          </div>
+        </div>
+      )}
+
+      {status && (
+        <div className={`rounded-xl p-3 text-sm text-center font-medium ${status.type === 'ok' ? 'bg-emerald-50 border border-emerald-300 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+          {status.msg}
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <button
+          onClick={handlePush}
+          disabled={syncing || !token}
+          className="flex-1 bg-[#1e3a5f] text-white rounded-xl py-2.5 text-sm font-medium shadow-sm disabled:opacity-40 active:scale-[0.98] transition-transform"
+        >
+          {syncing ? '同步中...' : '上傳 ↑'}
+        </button>
+        <button
+          onClick={handlePull}
+          disabled={syncing || !token}
+          className="flex-1 bg-white border border-[#1e3a5f] text-[#1e3a5f] rounded-xl py-2.5 text-sm font-medium shadow-sm disabled:opacity-40 active:scale-[0.98] transition-transform"
+        >
+          {syncing ? '同步中...' : '下載 ↓'}
+        </button>
+      </div>
+    </div>
+  )
+}
 
 function TireSection({ store, refresh }) {
   const [targetKm, setTargetKm] = useState(String(store.tireTargetKm || ''))
@@ -282,7 +393,10 @@ export default function Settings({ store, refresh }) {
       {/* 輪胎管理 */}
       <TireSection store={store} refresh={refresh} />
 
-      {/* 匯���/匯入/重置 */}
+      {/* 雲端同步 */}
+      <GistSyncSection store={store} refresh={refresh} />
+
+      {/* 匯出/匯入/重置 */}
       <div className="space-y-2 pt-4">
         <h2 className="text-sm font-bold text-gray-500">資料管理</h2>
         <div className="flex gap-2">
