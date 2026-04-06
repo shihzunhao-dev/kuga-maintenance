@@ -45,6 +45,11 @@ function ItemCard({ item, checked, onToggle, onManualReplace }) {
           <div className="text-[11px] text-gray-400 mt-0.5">
             週期 {item.intervalKm.toLocaleString()} km ・ 上次 {item.lastReplacedKm.toLocaleString()} km
           </div>
+          {item.spec && (
+            <div className="text-[11px] text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 mt-1 inline-block">
+              {item.spec}
+            </div>
+          )}
         </div>
         {/* 手動更換按鈕 */}
         <button
